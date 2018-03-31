@@ -23,10 +23,14 @@ class TweetScraper(CrawlSpider):
     name = 'TweetScraper'
     allowed_domains = ['twitter.com']
 
-    def __init__(self, query='', lang='', crawl_user=False, top_tweet=False):
+    def __init__(self, query='', lang='', filename='', location='', category='', crawl_user=False, top_tweet=False):
 
         self.query = query
         self.url = "https://twitter.com/i/search/timeline?l={}".format(lang)
+
+        self.filename = filename
+        self.location = location
+        self.category = category
 
         if not top_tweet:
             self.url = self.url + "&f=tweets"
@@ -63,6 +67,10 @@ class TweetScraper(CrawlSpider):
         for item in items:
             try:
                 tweet = Tweet()
+
+                tweet['filename'] = self.filename
+                tweet['location'] = self.location
+                tweet['category'] = self.category
 
                 tweet['usernameTweet'] = item.xpath('.//span[@class="username u-dir u-textTruncate"]/b/text()').extract()[0]
 
